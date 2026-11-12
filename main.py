@@ -26,13 +26,13 @@ def forecast(chart):
         for k, v in places.items():
             add(uid, k, v / s)
 
-    return rows, [int(u) for u in chart[:N]]
+    return rows, total, [int(u) for u in chart[:N]]
 
 
-rows, top10 = forecast(chart)
+rows, total, top10 = forecast(chart)
 
 out = [{"universe_id": int(u), "place": int(k), "p": round(min(p / max(total[k], 1.0), 1.0), 6)}
        for u, k, p in rows]
 os.makedirs(O, exist_ok=True)
-json.dump({"probabilities": out, "top10": [int(u) for u in chart[:N]]},
+json.dump({"probabilities": out, "top10": top10},
           open(os.path.join(O, task.get("output", "forecast.json")), "w"))
